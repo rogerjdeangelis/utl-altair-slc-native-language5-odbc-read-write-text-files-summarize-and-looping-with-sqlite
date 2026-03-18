@@ -33,14 +33,17 @@ Altair slc native language5 odbc read write text files and summarize and looping
 
       PROCESS
 
-      1  slc create sqlite table 'have' with 3 lines (sentences) and column name line
+      1  slc create sqlite table 'have' with 5 lines (sentences) and column name line
 
          d:/sqlite/mysqlite.db table have
-         line
+         line                        name        sex    age    height
 
-         This is the 1st line
-         This is the 2nd line
-         This is the 3rd line
+         This is the 1st line        Alfred       M      14     69.0
+         This is the 2nd line        Alice        F      13     56.5
+         This is the 3rd line        Barbara      F      13     65.3
+         This is the 4th line        Carol        F      14     62.8
+         This is the 5th line        Henry        M      14     63.5
+
 
       2  slc summarize sqlite table
 
