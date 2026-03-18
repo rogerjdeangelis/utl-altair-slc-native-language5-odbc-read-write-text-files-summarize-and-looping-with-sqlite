@@ -488,6 +488,222 @@ run;
 /*  1       5.5                                                                                                           */
 /**************************************************************************************************************************/
 
+/*
+| | ___   __ _
+| |/ _ \ / _` |
+| | (_) | (_| |
+|_|\___/ \__, |
+         |___/
+*/
+
+1                                          Altair SLC       11:47 Wednesday, March 18, 2026
+
+NOTE: Copyright 2002-2025 World Programming, an Altair Company
+NOTE: Altair SLC 2026 (05.26.01.00.000758)
+      Licensed to Roger DeAngelis
+NOTE: This session is executing on the X64_WIN11PRO platform and is running in 64 bit mode
+
+NOTE: AUTOEXEC processing beginning; file is C:\wpsoto\autoexec.sas
+NOTE: AUTOEXEC source line
+1       +  ï»¿ods _all_ close;
+           ^
+ERROR: Expected a statement keyword : found "?"
+
+NOTE: AUTOEXEC processing completed
+
+
+Altair SLC
+
+The DATASETS Procedure
+
+         Directory
+
+Libref           WORKX
+Engine           SAS7BDAT
+Physical Name    d:\wpswrkx
+
+                              Members
+
+            Member    Member
+  Number    Name      Type         File Size      Date Last Modified
+
+--------------------------------------------------------------------
+
+       1    AVGS      DATA             17408      18MAR2026:11:12:38
+1         proc datasets lib=workx kill;
+2         run;
+NOTE: Deleting WORKX.avgs (type=DATA)
+NOTE: Procedure datasets step took :
+      real time : 0.040
+      cpu time  : 0.000
+
+
+3
+4         proc sql;
+5            connect to odbc as mycon (noprompt=
+6             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX);
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Successfully connected to database ODBC as alias MYCON.
+7
+8            create table workx.avgs as
+9
+10           select * from connection to mycon
+11           (
+12              /* Your SQLite query goes here */
+13              select
+14                group_concat(name) as names
+15               ,sex
+16               ,avg(age)    as avgage
+17               ,avg(height) as avghgt
+18              from
+19                have
+20              group
+21                by sex
+22           );
+NOTE: Data set "WORKX.avgs" has 2 observation(s) and 4 variable(s)
+23
+24           disconnect from mycon;
+NOTE: Successfully disconnected from database MYCON.
+25
+26        quit;
+NOTE: Procedure sql step took :
+      real time : 0.203
+      cpu time  : 0.109
+
+
+27
+28        proc print data=workx.avgs width=min;
+29        format names $24.;
+30        run;
+NOTE: 2 observations were read from "WORKX.avgs"
+NOTE: Procedure print step took :
+      real time : 0.005
+      cpu time  : 0.000
+
+
+31
+32
+33        %utlfkil(d:/txt/class_export.txt)
+34
+35        proc sql;
+36           connect to odbc as mycon (noprompt=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX);
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Successfully connected to database ODBC as alias MYCON.
+37
+38           execute (
+39              SELECT writefile(
+40                 'd:/txt/class_export.txt',
+41                 (SELECT group_concat(line, char(10)) FROM have)
+42              )
+43           ) by mycon;
+WARNING: The passthrough statement returned at least one result set which has not been read because the query was run via an EXECUTE BY statement.
+NOTE: Successfully passed statement to database MYCON.
+44
+45           disconnect from mycon;
+NOTE: Successfully disconnected from database MYCON.
+46        quit;
+NOTE: Procedure sql step took :
+      real time : 0.013
+      cpu time  : 0.000
+
+
+47
+48
+49        proc sql;
+50           connect to odbc as mycon (noprompt=
+51            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX);
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Successfully connected to database ODBC as alias MYCON.
+52
+53           create table workx.lines as
+54
+55           select * from connection to mycon
+56           (
+57             SELECT value AS lines
+58             FROM json_each('["' || replace(readfile('d:/txt/class_export.txt'), char(10), '","') || '"]')
+59           );
+NOTE: Data set "WORKX.lines" has 5 observation(s) and 1 variable(s)
+60
+61           disconnect from mycon;
+NOTE: Successfully disconnected from database MYCON.
+62
+63        quit;
+NOTE: Procedure sql step took :
+      real time : 0.023
+      cpu time  : 0.031
+
+
+64
+65        proc print data=workx.lines;
+66        run;quit;
+NOTE: 5 observations were read from "WORKX.lines"
+NOTE: Procedure print step took :
+      real time : 0.012
+      cpu time  : 0.000
+
+
+67
+68
+69        proc sql;
+70           connect to odbc as mycon (noprompt=
+71            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX);
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Connected to DB:  (SQLite version 3.43.2)
+NOTE: Successfully connected to database ODBC as alias MYCON.
+72
+73           create table workx.median_value as
+74
+75           select * from connection to mycon
+76             (
+77                WITH RECURSIVE nums(x) AS (
+78                  SELECT 1
+79                  UNION ALL
+80                  SELECT x + 1 FROM nums WHERE x < 10
+81                ),
+82                med AS (
+83                  SELECT
+84                    x,
+85                    ROW_NUMBER() OVER (ORDER BY x) AS r,
+86                    COUNT(*) OVER () AS c
+87                  FROM nums
+88                )
+89                SELECT AVG(x) AS median
+90                FROM med
+91                WHERE r IN ((c+1)/2, (c+2)/2)
+92            );
+NOTE: Data set "WORKX.median_value" has 1 observation(s) and 1 variable(s)
+NOTE: Procedure sql step took :
+      real time : 0.017
+      cpu time  : 0.015
+
+
+93
+94        proc print data=workx.median_value;
+95        run;
+NOTE: 1 observations were read from "WORKX.median_value"
+NOTE: Procedure print step took :
+      real time : 0.006
+      cpu time  : 0.000
+
+
+ERROR: Error printed on page 1
+
+NOTE: Submitted statements took :
+      real time : 1.595
+      cpu time  : 0.234
+
+/*              _
+  ___ _ __   __| |
+ / _ \ `_ \ / _` |
+|  __/ | | | (_| |
+ \___|_| |_|\__,_|
+
+*/
+
+
 /*              _
   ___ _ __   __| |
  / _ \ `_ \ / _` |
