@@ -1,0 +1,7 @@
+{
+  "bundle": "t001_summarize_by_sex",
+  "source_file": "utl-altair-slc-native-language5-odbc-read-write-text-files-summarize-and-looping-with-sqlite.sas",
+  "source_blob_sha": "bd6ce543b7c7e51cfa26e0f56f7bada0f7af0589",
+  "source_commit": "46bd722ae82a7834918423bacb29310c8947ce38",
+  "notes": "Summarize-by-sex step. Original loads the five-row `have` table into SQLite over ODBC and runs the group-by aggregate as a passthrough query; the ODBC libname points at a Windows path (d:/sqlite/mysqlite.db) that cannot run outside SLC. Kept the author's exact cards4 rows and his group-by-sex aggregation, moved from ODBC passthrough to portable PROC SQL. Output reproduces the documented WORKX.AVGS: F avgage 13.3333 avghgt 61.5333, M avgage 14 avghgt 66.25."
+}
