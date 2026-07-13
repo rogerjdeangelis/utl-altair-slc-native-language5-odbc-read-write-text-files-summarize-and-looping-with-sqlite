@@ -1,0 +1,14 @@
+NOTE: Option OBS changed to 100.
+NOTE: DATA nums
+
+
+NOTE: Wrote nums (10 rows, 1 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC MEANS
+NOTE: Output dataset median_value has 1 observations and 1 variables.
+NOTE: PROC MEANS statement used.
+NOTE: PROC PRINT data=median_value
+
+NOTE: PROC PRINT completed: 1 observations printed, 1 variables
